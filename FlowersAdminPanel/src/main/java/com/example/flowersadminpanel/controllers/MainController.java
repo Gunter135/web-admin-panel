@@ -1,12 +1,11 @@
 package com.example.flowersadminpanel.controllers;
 
 
+import com.example.flowersadminpanel.dto.BouquetDTO;
 import com.example.flowersadminpanel.dto.FlowerStorageDTO;
+import com.example.flowersadminpanel.dto.Photo;
 import com.example.flowersadminpanel.dto.ShipmentDTO;
-import com.example.flowersadminpanel.models.FlowerShipment;
-import com.example.flowersadminpanel.models.FlowerStorage;
-import com.example.flowersadminpanel.models.Provider;
-import com.example.flowersadminpanel.models.Shipment;
+import com.example.flowersadminpanel.models.*;
 import com.example.flowersadminpanel.services.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.bson.types.ObjectId;
@@ -14,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,10 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.InputStream;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -35,7 +35,9 @@ public class MainController {
     ProviderService providerService;
     ShipmentService shipmentService;
     CodeGenService codeGenService;
+    BouquetService bouquetService;
     ModelMapper modelMapper;
+    ImageService imageService;
 
     @Autowired
     public MainController(FlowerShipmentService flowerShipmentService,
@@ -43,13 +45,17 @@ public class MainController {
                           ProviderService providerService,
                           ModelMapper modelMapper,
                           ShipmentService shipmentService,
-                          CodeGenService codeGenService) {
+                          CodeGenService codeGenService,
+                          ImageService imageService,
+                          BouquetService bouquetService) {
         this.flowerShipmentService = flowerShipmentService;
         this.flowerStorageService = flowerStorageService;
         this.providerService = providerService;
         this.modelMapper = modelMapper;
         this.shipmentService = shipmentService;
         this.codeGenService = codeGenService;
+        this.imageService = imageService;
+        this.bouquetService = bouquetService;
     }
 
     @GetMapping("/warehouse")
@@ -170,6 +176,33 @@ public class MainController {
                 .body(flowerStorageService.createExcelFile(flowerStorageService.findAll()));
     }
 
+    @GetMapping("/bouquets")
+    public ResponseEntity<List<BouquetDTO>> getAllBouquets(){
+        return new ResponseEntity<List<BouquetDTO>>(bouquetService.findAll(),HttpStatus.OK);
+    }
+
+
+    @PostMapping("/showcase/save_image")
+    public ResponseEntity<HttpStatus> saveImage(@RequestBody Base64 blob){
+        System.out.println(blob);
+//        System.out.println(imageService.addPhoto(inputStream));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+//    @GetMapping(value = "/showcase/get_image/{id}",produces = MediaType.IMAGE_PNG_VALUE)
+//    public ResponseEntity<String> getImage(@PathVariable String id) throws IOException {
+//        GridFsResource gridFsdbFile = imageService.getPhoto(id);
+//        byte[] bytes = gridFsdbFile.getInputStream().readAllBytes();
+//        String encoded = Base64.getEncoder().encodeToString(bytes);
+//        return new ResponseEntity<String>(encoded,HttpStatus.OK);
+//    }
+    @GetMapping(value = "/showcase/get_image/{id}",produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<ByteArrayResource> getImage(@PathVariable String id) throws IOException {
+        ByteArrayResource inputStream = imageService.getImageResource(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .contentLength(inputStream.contentLength())
+                .body(inputStream);
+    }
 
     // DTO CONVERTERS
 

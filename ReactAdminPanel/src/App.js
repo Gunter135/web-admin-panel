@@ -10,6 +10,7 @@ import Shipment from "./scenes/invoice";
 import ShipmentList from "./scenes/invoiceEdit";
 import ShipmentListEdit from "./scenes/invoiceEditPricing";
 import WarehouseItem from "./scenes/warehouseItem";
+import Showcase from "./scenes/showcase";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                             <Route path="/" element={<Dashboard/>}/>
                             <Route path="/warehouse" element={<Warehouse/>}/>
                             <Route path="/shipments" element={<Shipment/>}/>
+                            <Route path="/showcase" element={<Showcase/>}/>
                             <Route path="/warehouse/:id" element={<WarehouseItem/>}/>
                             <Route path="/shipments/:code" element={<ShipmentList/>}/>
                             <Route path="/shipments/:code/pricings" element={<ShipmentListEdit/>}/>

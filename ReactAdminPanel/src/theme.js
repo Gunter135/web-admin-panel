@@ -165,6 +165,10 @@ export const themeSettings=(mode)=>{
                     main: colors.redAccent[500],
                     contrastText: colors.grey[900]
                 },
+                yellow:{
+                    main: "#f5c71a ",
+                    contrastText: colors.grey[900]
+                },
                 green:{
                     main: colors.greenAccent[500],
                     contrastText: colors.grey[900]

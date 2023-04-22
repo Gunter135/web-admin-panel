@@ -142,7 +142,7 @@ const Sidebar = () => {
                                 >
                                 <Item
                                     title="Букеты на витрине"
-                                    to="/team"
+                                    to="/showcase"
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
