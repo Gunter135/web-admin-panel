@@ -94,7 +94,7 @@ const Sidebar = () => {
                                     width="60px"
                                     height="60px"
                                     src={`../../assets/logo.png`}
-                                    style={{cursor: "pointer",borderRadius: "50%"}}
+                                    style={{cursor: "pointer",borderRadius: "50%",objectFit: "cover"}}
                                     />
                                     <Link to="/"/>
                                 </Box>
@@ -443,7 +443,7 @@ const Sidebar = () => {
                     </Menu>
                 </SidebarContent>
                 <SidebarFooter>
-                    <Typography pl="15px">SUBSCRIBE TO TECHNOBLADE</Typography>
+                    <Typography pl="15px"></Typography>
                 </SidebarFooter>
             </ProSidebar>
         </Box>

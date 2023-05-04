@@ -324,7 +324,7 @@ const ShipmentListEdit = () =>{
                 alignItems="center" 
                 justifyContent={"center"}
                 boxShadow="2px 2px 3px #444444"
-                //у меня нет чувства вкуса, это выглядит уродливо
+                //TODO: learn how to design better
                 border={`solid 2px ${colors.primary[900]}`}>
                 <Typography color={colors.primary[900]}>
                 {temporaryShipmentItem.map(val => val.id === params.row.id ? val.amount:"")}

@@ -1,5 +1,6 @@
 package com.example.flowersadminpanel.services;
 
+import com.example.flowersadminpanel.dto.NewBouquet;
 import com.example.flowersadminpanel.models.BouquetFlower;
 import com.example.flowersadminpanel.repositories.BouquetFlowerRepository;
 import org.bson.types.ObjectId;
@@ -23,7 +24,13 @@ public class BouquetFlowerService {
     public void save(BouquetFlower bouquetFlower){
         bouquetFlowerRepository.save(bouquetFlower);
     }
+    @Transactional
+    public void delete(BouquetFlower bouquetFlower){
+        bouquetFlowerRepository.delete(bouquetFlower);
+    }
     public BouquetFlower findById(String id){
-        return bouquetFlowerRepository.findById(new ObjectId(id)).get();
+        if (bouquetFlowerRepository.findById(new ObjectId(id)).isPresent())
+            return bouquetFlowerRepository.findById(new ObjectId(id)).get();
+        return new BouquetFlower();
     }
 }

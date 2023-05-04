@@ -71,9 +71,13 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
-
+    @Transactional
     public void save(Image image){
         imageRepository.save(image);
+    }
+    @Transactional
+    public void delete(Image image){
+        imageRepository.delete(image);
     }
     public Optional<Image> findImageById(String id){
         return imageRepository.findById(new ObjectId(id));

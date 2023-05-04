@@ -1,10 +1,7 @@
 package com.example.flowersadminpanel.controllers;
 
 
-import com.example.flowersadminpanel.dto.BouquetDTO;
-import com.example.flowersadminpanel.dto.FlowerStorageDTO;
-import com.example.flowersadminpanel.dto.Photo;
-import com.example.flowersadminpanel.dto.ShipmentDTO;
+import com.example.flowersadminpanel.dto.*;
 import com.example.flowersadminpanel.models.*;
 import com.example.flowersadminpanel.services.*;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -64,6 +61,11 @@ public class MainController {
                 , HttpStatus.OK);
     }
 
+    @GetMapping("/warehouse_dto")
+    public ResponseEntity<List<FlowerStorageDTO>> getAllStoredFlowersDTO(){
+        return new ResponseEntity<>(convertToFlowerStorageDTOList(flowerStorageService.findAll())
+                , HttpStatus.OK);
+    }
     @PostMapping("/warehouse/create")
     public ResponseEntity<HttpStatus> createNewFlower(@RequestBody FlowerStorage flowerStorage){
         flowerStorageService.save(flowerStorage);
@@ -203,6 +205,23 @@ public class MainController {
                 .contentLength(inputStream.contentLength())
                 .body(inputStream);
     }
+
+    @PostMapping("/showcase/save_new_bouquet")
+    public ResponseEntity<HttpStatus> saveNewBouquet(@RequestBody NewBouquet newBouquet){
+        bouquetService.saveNewBouquet(newBouquet);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/showcase/delete_bouquet/{id}")
+    public ResponseEntity<HttpStatus> deleteBouquet(@PathVariable String id){
+        bouquetService.deleteByStringId(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/showcase/disassemble_bouquet/{id}")
+    public ResponseEntity<HttpStatus> disassembleBouquet(@PathVariable String id){
+        bouquetService.disassemble(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     // DTO CONVERTERS
 
