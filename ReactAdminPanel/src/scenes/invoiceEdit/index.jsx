@@ -131,7 +131,7 @@ const ShipmentList = () =>{
             </Box>
             <Box backgroundColor={colors.blueAccent[700]}>
                 <Box pb="20px" pl="10px" display="flex" justifyContent="space-between">
-                    {shipment.status ?<Button variant="contained" color="red" onClick={()=>{updateStatus()}}>YOU SHOULD KILL YOURSELF NOW</Button> : <Button variant="contained" color="green" onClick={()=>{updateStatus()}}>CAN I PLEASE GET A DOUBLE WHOPPER WITH NO CHEESE</Button>}
+                    {shipment.status ?<Button variant="contained" color="red" onClick={()=>{updateStatus()}}>Change status to opened</Button> : <Button variant="contained" color="green" onClick={()=>{updateStatus()}}>Change status to closed</Button>}
                 </Box>
                 <div style={{
                     borderBottom: `1px solid ${colors.primary[300]}`,
