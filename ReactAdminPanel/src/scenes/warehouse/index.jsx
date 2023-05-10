@@ -10,11 +10,45 @@ import SearchIcon from "@mui/icons-material/Search"
 
 
 
+
+var value = "";
+
+
+const CustomizedInputBase = ({searchFilter}) =>{
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+    return(
+        <Box 
+            mr="20px"
+            display="flex" 
+            backgroundColor={colors.primary[400]} 
+            borderRadius="5px"
+            >
+            <InputBase 
+                sx={{ml:2,flex: 1}} 
+                placeholder="Search" 
+                inputProps={{ 'aria-label': 'search google maps' }}
+                value={value}
+                onChange={event=>{value = event.target.value;searchFilter()}}
+                onKeyDown={event=>{if(event.key === 'Enter'){searchFilter()}}}
+            />
+            <Button 
+                color="secondary" 
+                onClick={()=>{searchFilter()}} 
+                
+            >
+                <SearchIcon/>
+            </Button>
+        </Box>
+    )
+}
+
 const Warehouse = () =>{
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     var customArrayBuffer = [];
     const[item,setItem] = useState([]);
+    // const[value,setValue] = useState("");
     const[newItem,setNewItem] = useState(
         {name: "",
         amount : 0,
@@ -25,13 +59,12 @@ const Warehouse = () =>{
     const[open,setOpen] = useState(false);
     const[filterArray,setFilterArray] = useState([]);
     //const[globalInputValue,setGlobalInputValue] = useState();
+
     const getFlowers = async () =>{
         try{
-          const response = await api.get("/warehouse");
-          //console.log(response.data);
-          // DONT FORGET TO MAP ALL THE DATA YOU GET FROM API CALL, EITHER WAY IT WILL BREAK
-          setItem(response.data);
-          setFilterArray(response.data);
+            const response = await api.get("/warehouse");
+            setItem(response.data);
+            setFilterArray(response.data);
         }
         catch(err){
           console.log(err);
@@ -44,7 +77,7 @@ const Warehouse = () =>{
     //
     //
     const downloadXLS = async () =>{
-        try{//🍌🍌🍌
+        try{
             // const outputFilename = `${Date.now()}.xlsx`;
             const outputFilename = `Storage review.xlsx`;
             const response = await api.get("/warehouse/download/excel");
@@ -79,59 +112,30 @@ const Warehouse = () =>{
             console.log(err)
         }
     }
-
-    const CustomizedInputBase = () =>{
-        const[value,setValue] = useState();
-        //console.log(value)
-        // const handleSearch = (event) =>{
-        //     props.click(value);
-        // }
-        const searchFilter = () => {
-            //setGlobalInputValue(value)
-            if ((value !== undefined) && (value !== null) && (value !== "")){
-                for(var i = 0;i<item.length;i++){
-                    if(item[i].name.includes(value)){
-                        customArrayBuffer.push(item[i])
-                        console.log(customArrayBuffer)
-                    }
+    const searchFilter = () => {
+        if ((value !== undefined) && (value !== null) && (value !== "")){
+            for(let i = 0;i<item.length;i++){
+                if(item[i].name.includes(value)){
+                    customArrayBuffer.push(item[i])
+                    //console.log(customArrayBuffer)
                 }
-                setFilterArray(customArrayBuffer)
-                
-            }else{
-                customArrayBuffer = []
-                setFilterArray(item)
             }
+            setFilterArray(customArrayBuffer)
+            
+        }else{
+            customArrayBuffer = []
+            setFilterArray(item)
         }
-        return(
-            <Box 
-                mr="20px"
-                display="flex" 
-                backgroundColor={colors.primary[400]} 
-                borderRadius="5px"
-                >
-                <InputBase 
-                    sx={{ml:2,flex: 1}} 
-                    placeholder="Search" 
-                    value={value ? value : ""}
-                    inputProps={{ 'aria-label': 'search google maps' }}
-                    onChange={event=>{setValue(event.target.value)}}
-                    onKeyDown={event=>{if(event.key === 'Enter'){searchFilter()}}}
-                />
-                <Button 
-                    color="secondary" 
-                    onClick={()=>{searchFilter()}} 
-                    
-                >
-                    <SearchIcon/>
-                </Button>
-            </Box>
-        )
     }
+
+
+    
+
 
     const handleCreateItem = async () => {
         try{
             const response = await api.post("/warehouse/create",newItem);
-            console.log(response)
+            //console.log(response)
             handleClose();
             window.location.reload();
         }
@@ -279,7 +283,7 @@ const Warehouse = () =>{
                 <Box pb="20px" pl="10px" display="flex" justifyContent="space-between">
                     <Button variant="contained" color="secondary" onClick={downloadXLS}>Export to Excel</Button>
                     <Button variant="contained" color="secondary" onClick={handleClickOpen} sx={{mr:"700px"}}>Create new Item</Button>
-                    <CustomizedInputBase/>
+                    <CustomizedInputBase searchFilter={searchFilter}/>
                 </Box>
                 <div style={{
                     borderBottom: `1px solid ${colors.primary[300]}`,

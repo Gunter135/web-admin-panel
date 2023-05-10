@@ -33,12 +33,32 @@ const Item =({title, icon, to, selected, setSelected,setSelectedSubMenu}) =>{
         <MenuItem 
         active={selected===title} 
         style={{color:colors.grey[100]}} 
-        onClick={()=>{setSelected(title);setSelectedSubMenu(title)}}
+        onClick={()=>{setSelected(title);if(setSelectedSubMenu){setSelectedSubMenu(title)}}}
         icon={icon}
         >
             <Typography variant="h6">{title}</Typography>
             <Link to={to}/>
         </MenuItem>
+    )
+}
+const CustomSubMenu = ({title,selectedSubMenu,setSelectedSubMenu,icon,children}) => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+    return(
+        <Box>
+            {/* <Box position={"relative"} width={"300px"} height="20px" ml={"-5px"} top="32px" mt={"-32px"} overflow="visible" zIndex={"100"} >
+                <div style={{width: "300px",height: "20px",backgroundColor: "#Fff"}} onClick={()=>{console.log("yes")}}></div>
+            </Box> */}
+            <SubMenu 
+            style={{color:colors.grey[100]}} 
+            title={title}
+            icon={icon}
+            open={selectedSubMenu === title}
+            onClick={()=>{selectedSubMenu === title ? setSelectedSubMenu("") : setSelectedSubMenu(title)}}
+        >
+            {children}
+            </SubMenu>
+        </Box>
     )
 }
 
@@ -77,14 +97,14 @@ const Sidebar = () => {
                         {/* LOGO AND MENU ICON */}
                         <MenuItem
                         // onClick={() => setIsCollapsed(!isCollapsed)}
-                        icon={isCollapsed? <MenuOutlinedIcon onClick={() => setIsCollapsed(!isCollapsed)}/> : undefined}
+                        icon={isCollapsed ? <MenuOutlinedIcon onClick={() => setIsCollapsed(!isCollapsed)}/> : undefined}
                         style={{
                             margin: "10px -20px 20px 0",
                             color: colors.grey[100],
                         }}>
                             {!isCollapsed &&(<Box
                             display="flex"
-                            justifyContent="space-between"
+                            
                             alignItems="center"
                             ml ="15px"
                             >
@@ -98,13 +118,13 @@ const Sidebar = () => {
                                     />
                                     <Link to="/"/>
                                 </Box>
-                                <Typography variant="h5" color={colors.grey[100]}>
+                                <Typography ml={"50px"} variant="h5" color={colors.grey[100]}>
                                     ADMPANELV2
                                     <Link to="/"/>
                                 </Typography>
-                                <IconButton onClick={() => {setIsCollapsed(!isCollapsed)}}>
+                                {/* <IconButton onClick={() => {setIsCollapsed(!isCollapsed)}}>
                                     <MenuOutlinedIcon/>
-                                </IconButton>
+                                </IconButton> */}
                             </Box>)}
                         </MenuItem>
                     </Menu>
@@ -113,12 +133,12 @@ const Sidebar = () => {
                 <SidebarContent>
                     <Menu>
                         <Box paddingLeft={isCollapsed ? undefined : "10px"} selectedsubmenu={selectedSubMenu}>
-                            <SubMenu 
+                            <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Точки продаж" 
                                 icon={<StoreIcon/>}
-                                open={selectedSubMenu==="Точки продаж" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Точки продаж" ? setSelectedSubMenu("Точки продаж") : setSelectedSubMenu("Точки продаж")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="Карточка точки продаж"
@@ -132,13 +152,13 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
-                            <SubMenu 
+                            </CustomSubMenu>
+                            <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Витрина" 
                                 icon={<EmojiNatureIcon/>}
-                                open={selectedSubMenu==="Витрина" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Витрина" ? setSelectedSubMenu("Витрина") : setSelectedSubMenu("Витрина")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="Букеты на витрине"
@@ -152,29 +172,29 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
+                            </CustomSubMenu>
                             <Item
-                                    title="Заказы"
-                                    to="/"
-                                    icon={<TodayIcon/>}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                    setSelectedSubMenu={setSelectedSubMenu}
-                                />
-                                <Item
-                                    title="Рабочие Смены"
-                                    to="/"
-                                    icon={<AttachMoneyIcon/>}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                    setSelectedSubMenu={setSelectedSubMenu}
-                                />
-                                <SubMenu 
+                                title="Заказы"
+                                to="/"
+                                icon={<TodayIcon/>}
+                                selected={selected}
+                                setSelected={setSelected}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                            />
+                            <Item
+                                title="Рабочие Смены"
+                                to="/"
+                                icon={<AttachMoneyIcon/>}
+                                selected={selected}
+                                setSelected={setSelected}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                            />
+                            <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Склад" 
                                 icon={<AccountBalanceIcon/>}
-                                open={selectedSubMenu==="Склад" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Склад" ? setSelectedSubMenu("Склад") : setSelectedSubMenu("Склад")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="Обзор склада"
@@ -236,7 +256,7 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
+                            </CustomSubMenu>
                             <Item
                                     title="Рецепты"
                                     to="/"
@@ -245,12 +265,12 @@ const Sidebar = () => {
                                     setSelected={setSelected}
                                     setSelectedSubMenu={setSelectedSubMenu}
                                 />
-                             <SubMenu 
+                             <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Продукты" 
                                 icon={<ShoppingBasketIcon/>}
-                                open={selectedSubMenu==="Продукты" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Продукты" ? setSelectedSubMenu("Продукты") : setSelectedSubMenu("Продукты")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="Каталог товаров и услуг"
@@ -270,13 +290,13 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
-                            <SubMenu 
+                            </CustomSubMenu>
+                            <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Клиенты" 
                                 icon={<AccountCircleIcon/>}
-                                open={selectedSubMenu==="Клиенты" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Клиенты" ? setSelectedSubMenu("Клиенты") : setSelectedSubMenu("Клиенты")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="Список клиентов"
@@ -302,21 +322,21 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
+                            </CustomSubMenu>
                             <Item
-                                    title="Сотрудники"
-                                    to="/"
-                                    icon={<PersonIcon/>}
-                                    selected={selected}
-                                    setSelected={setSelected}
-                                    setSelectedSubMenu={setSelectedSubMenu}
-                                />
-                            <SubMenu 
+                                title="Сотрудники"
+                                to="/"
+                                icon={<PersonIcon/>}
+                                selected={selected}
+                                setSelected={setSelected}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                            />
+                            <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Справочник" 
                                 icon={<HelpIcon/>}
-                                open={selectedSubMenu==="Справочник" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Справочник" ? setSelectedSubMenu("Справочник") : setSelectedSubMenu("Справочник")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="Теги заказов"
@@ -366,13 +386,13 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
-                            <SubMenu 
+                            </CustomSubMenu>
+                            <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Система лояльности" 
                                 icon={<LocalOfferIcon/>}
-                                open={selectedSubMenu==="Система лояльности" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Система лояльности" ? setSelectedSubMenu("Система лояльности") : setSelectedSubMenu("Система лояльности")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="Бонусы"
@@ -386,7 +406,7 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
+                            </CustomSubMenu>
                             <Item
                                     title="Интернет магазин"
                                     to="/"
@@ -395,12 +415,12 @@ const Sidebar = () => {
                                     setSelected={setSelected}
                                     setSelectedSubMenu={setSelectedSubMenu}
                                 />
-                            <SubMenu 
+                            <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Рассылки" 
                                 icon={<DraftsIcon/>}
-                                open={selectedSubMenu==="Рассылки" ? true : false}
-                                onClick={()=>{selectedSubMenu==="Рассылки" ? setSelectedSubMenu("Рассылки") : setSelectedSubMenu("Рассылки")}}
+                                setSelectedSubMenu={setSelectedSubMenu}
+                                selectedSubMenu={selectedSubMenu}
                                 >
                                 <Item
                                     title="СМС рассылки"
@@ -414,7 +434,7 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </SubMenu>
+                            </CustomSubMenu>
                             <Item
                                     title="Финансовый учет"
                                     to="/"
