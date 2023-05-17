@@ -1,4 +1,4 @@
-import { Box, Typography, Button, useTheme, IconButton} from "@mui/material";
+import { Box, Typography, Button, useTheme, IconButton, Select, MenuItem} from "@mui/material";
 import { tokens } from "../../theme";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header";
@@ -6,6 +6,9 @@ import api from "../../api/axiosConfig";
 import { useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
+
+var key_id = 0;
 
 
 const ShipmentListEdit = () =>{
@@ -24,6 +27,9 @@ const ShipmentListEdit = () =>{
     const[shipment,setShipment] = useState([]);
     const[temporaryShipmentItem,setTemporaryShipmentItem] = useState([]);
     const[tempId,setTempId] = useState(0);
+    const[selectedFlowers,setSelectedFlowers] = useState([]);
+    const[flowersList,setFlowersList] = useState([]);
+    const[blank,setBlank] = useState(0);
     // const[name,setName] = useState('');
 
 
@@ -31,9 +37,11 @@ const ShipmentListEdit = () =>{
         try{
             const response = await api.get("/flower_shipments/" + code);
             const response1 = await api.get("/shipments/" + code);
+            const response2 = await api.get("/warehouse/names")
             //console.log(response.data);
             setShipmentItem(response.data);
             setShipment(response1.data);
+            setFlowersList(response2.data)
             //setShipmentItem(convertObjArrayToMapArray(response.data))
         }
         catch(err){
@@ -43,11 +51,7 @@ const ShipmentListEdit = () =>{
       useEffect(() =>{
         getShipmentItem();
     },[])
-    // for (let i = 0;shipmentItem.length;i++){
-    //     shipmentItem[i].set("new_purchase_price",shipmentItem[i].purchase_price)
-    //     shipmentItem[i].set("new_amount",shipmentItem[i].amount)
-    // }
-    // console.log(shipmentItem)
+
     const convertObjArrayToMapArray = (objArray) =>{
         const result = new Array();
         for(let i = 0;objArray.length > i;i++){
@@ -132,6 +136,32 @@ const ShipmentListEdit = () =>{
     }
 
 
+    function checkIfSelected(item){
+        for(let i = 0;i < selectedFlowers.length;i++){
+            if(selectedFlowers.includes(item)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const handleSelectedFlowerInfoUpdate = (value,id) =>{
+        //MIGHT HAVE SOME KIND OF BUG BUT I'M NOT SURE OF IT
+        for (let i = 0;i < temporaryShipmentItem.length;i++){
+            if (temporaryShipmentItem[i].id === id){
+                temporaryShipmentItem[i].name = value;
+            }
+        }
+        for (let i = 0;i < shipmentItem.length;i++){
+            if (shipmentItem[i].id === id){
+                shipmentItem[i].name = value; 
+            }
+        }
+        key_id++;
+        selectedFlowers.push(value)
+        setBlank(key_id)
+    }
+
 
     //
     // const handleCellEdit = useCallback(
@@ -181,23 +211,23 @@ const ShipmentListEdit = () =>{
         headerName:"Name",
         flex: 0.5,
         editable: true,
-        // renderCell:(params) =>(
-        //     <Box sx={{ minWidth: 120 }}>
-        //         <FormControl fullWidth>
-        //             <InputLabel id="demo-simple-select-label">Name</InputLabel>
-        //             <Select
-        //             labelId="demo-simple-select-label"
-        //             id="demo-simple-select"
-        //             value={name}
-        //             label="Name"
-        //             onChange={handleName}
-        //             >
-        //                 <MenuItem value={params.row.name}>{}</MenuItem>
-        //             </Select>
-        //         </FormControl>
-        //     </Box>
-
-        // )
+        renderCell:(params) =>(
+            <Select
+                label="Flower"
+                key={key_id}
+                value={params.row.name}
+                onChange={event=>{handleSelectedFlowerInfoUpdate(event.target.value,params.row.id)}}>
+                    {flowersList.map((item)=>(
+                        <MenuItem
+                            value={item} 
+                            key={item}
+                            disabled={checkIfSelected(item)}
+                        >
+                            {item}
+                        </MenuItem>
+                    ))}
+            </Select>
+        ),
         valueParser: (value: any, params: GridCellParams) => {
             if (value !== undefined && value !== null && value !== ""){
                 //console.log(temporaryShipmentItem)
@@ -248,7 +278,7 @@ const ShipmentListEdit = () =>{
         headerName:"New Total Price",
         flex: 0.5, 
         renderCell:(params) =>(
-            <Typography color={colors.greenAccent[500]}>
+            <Typography color={colors.greenAccent[500]} key={params.row.name}>
                 {temporaryShipmentItem.map(val => val.id === params.row.id ? val.purchase_price*val.amount:"")} ₽
                 {/* {params.row.new_amount === undefined || params.row.new_purchase_price === undefined ? "" : (params.row.new_purchase_price * params.row.new_amount) + " ₽"}  */}
             </Typography>
@@ -275,15 +305,14 @@ const ShipmentListEdit = () =>{
             alignItems="center" 
             justifyContent={"center"}
             boxShadow="2px 2px 3px #444444"
-            border={`solid 2px ${colors.primary[900]}`}>>
-                <Typography color={colors.greenAccent[800]}>
+            border={`solid 2px ${colors.primary[900]}`}>
+                <Typography color={colors.greenAccent[800]} key={params.row.id}>
                     {/* {params.row.new_purchase_price === undefined ? 0: params.row.new_purchase_price}₽ */}
                     {temporaryShipmentItem.map(val => val.id === params.row.id ? val.purchase_price:"")} ₽
                     {/* {temporaryShipmentItem.map(val => val.get("id") === params.row.id ? val.get("purchase_price"):"")} */}
                 </Typography>
             </Box>
         ),
-        //честно, очень плохая практика на прямую редактировать значения, лучше бы через useState но я глупенький(((((
         valueParser: (value: any, params: GridCellParams) => {
             if (value !== undefined && value !== null && value !== ""){
                 //console.log(temporaryShipmentItem)

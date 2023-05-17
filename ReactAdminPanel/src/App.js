@@ -11,6 +11,8 @@ import ShipmentList from "./scenes/invoiceEdit";
 import ShipmentListEdit from "./scenes/invoiceEditPricing";
 import WarehouseItem from "./scenes/warehouseItem";
 import Showcase from "./scenes/showcase";
+import ClientsList from "./scenes/clients";
+import BonusGroupsList from "./scenes/bonuses";
 
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
                             <Route path="/warehouse" element={<Warehouse/>}/>
                             <Route path="/shipments" element={<Shipment/>}/>
                             <Route path="/showcase" element={<Showcase/>}/>
+                            <Route path="/clients" element={<ClientsList/>}/>
+                            <Route path="/bonuses" element={<BonusGroupsList/>}/>
                             <Route path="/warehouse/:id" element={<WarehouseItem/>}/>
                             <Route path="/shipments/:code" element={<ShipmentList/>}/>
                             <Route path="/shipments/:code/pricings" element={<ShipmentListEdit/>}/>

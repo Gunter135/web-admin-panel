@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
@@ -50,6 +51,13 @@ public class FlowerStorageService {
     public Optional<FlowerStorage> findByName(String name){
         return Optional.ofNullable(flowerStorageRepository.findByName(name));
     }
+    public List<String> findAllNames(){
+        List<String> resultArray = new ArrayList<>();
+        for (FlowerStorage item: flowerStorageRepository.findAll()) {
+            resultArray.add(item.getName());
+        }
+        return resultArray;
+    }
     public String createExcelFile(List<FlowerStorage> list) throws IOException {
 /*        FlowerStorage flower = null;
         if (findById(id).isPresent())
@@ -80,7 +88,7 @@ public class FlowerStorageService {
             row1.createCell(0).setCellValue("Накладная: ");
             row1.createCell(1).setCellValue("Сводка товаров на складе");
             row2.createCell(0).setCellValue("Дата создания: ");
-            row2.createCell(1).setCellValue(LocalDateTime.now());
+            row2.createCell(1).setCellValue(String.valueOf(new Date()));
             row3.createCell(0).setCellValue("Склад: ");
             //gotta implement different warehouses option
             row3.createCell(1).setCellValue("DEFAULT");// .setCellStyle(style)

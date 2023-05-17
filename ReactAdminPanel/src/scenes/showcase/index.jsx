@@ -80,8 +80,8 @@ const Showcase = () =>{
         }
         //React will ignore your update if the next state is equal to the previous state,
         //and i've a workaround for this issue, implement another hook const[blank,setBlank] = useState()
-        console.log(selectedFlowers)
-        console.log("meow")
+        // console.log(selectedFlowers)
+        // console.log("meow")
         setBlank(value)
     }
 

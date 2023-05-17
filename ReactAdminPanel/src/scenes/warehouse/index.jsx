@@ -30,7 +30,6 @@ const CustomizedInputBase = ({searchFilter}) =>{
                 inputProps={{ 'aria-label': 'search google maps' }}
                 value={value}
                 onChange={event=>{value = event.target.value;searchFilter()}}
-                onKeyDown={event=>{if(event.key === 'Enter'){searchFilter()}}}
             />
             <Button 
                 color="secondary" 
@@ -280,10 +279,18 @@ const Warehouse = () =>{
             <Box backgroundColor={colors.blueAccent[700]} height="20px" borderRadius="5px 5px 0px 0px"> 
             </Box>
             <Box backgroundColor={colors.blueAccent[700]}>
-                <Box pb="20px" pl="10px" display="flex" justifyContent="space-between">
-                    <Button variant="contained" color="secondary" onClick={downloadXLS}>Export to Excel</Button>
-                    <Button variant="contained" color="secondary" onClick={handleClickOpen} sx={{mr:"700px"}}>Create new Item</Button>
-                    <CustomizedInputBase searchFilter={searchFilter}/>
+                <Box display={"flex"} justifyContent={"space-between"}>
+                    <Box display={"flex"}>
+                        <Box pb="20px" pl="10px" display="flex" justifyContent="space-between">
+                            <Button variant="contained" color="secondary" onClick={handleClickOpen}>Create new Item</Button>
+                        </Box>
+                        <Box pb="20px" pl="10px" display="flex" justifyContent="space-between">
+                            <Button variant="contained" color="secondary" onClick={downloadXLS}>Export to excel</Button>
+                        </Box>
+                    </Box>
+                    <Box pb={"20px"} display={"flex"} justifyContent={"flex-end"}>
+                        <CustomizedInputBase searchFilter={searchFilter}/>
+                    </Box>
                 </Box>
                 <div style={{
                     borderBottom: `1px solid ${colors.primary[300]}`,

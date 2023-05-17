@@ -35,6 +35,8 @@ public class MainController {
     BouquetService bouquetService;
     ModelMapper modelMapper;
     ImageService imageService;
+    ClientService clientService;
+    BonusGroupService bonusGroupService;
 
     @Autowired
     public MainController(FlowerShipmentService flowerShipmentService,
@@ -44,7 +46,9 @@ public class MainController {
                           ShipmentService shipmentService,
                           CodeGenService codeGenService,
                           ImageService imageService,
-                          BouquetService bouquetService) {
+                          BouquetService bouquetService,
+                          ClientService clientService,
+                          BonusGroupService bonusGroupService) {
         this.flowerShipmentService = flowerShipmentService;
         this.flowerStorageService = flowerStorageService;
         this.providerService = providerService;
@@ -53,6 +57,8 @@ public class MainController {
         this.codeGenService = codeGenService;
         this.imageService = imageService;
         this.bouquetService = bouquetService;
+        this.clientService = clientService;
+        this.bonusGroupService = bonusGroupService;
     }
 
     @GetMapping("/warehouse")
@@ -76,6 +82,12 @@ public class MainController {
     public ResponseEntity<Optional<FlowerStorage>> getFlowerFromStorage(@PathVariable ObjectId id) {
         return new ResponseEntity<Optional<FlowerStorage>>(flowerStorageService.findById(id),HttpStatus.OK);
 
+    }
+
+    @GetMapping("/warehouse/names")
+    public ResponseEntity<List<String>> getAllStoredFlowersNames(){
+        return new ResponseEntity<>(flowerStorageService.findAllNames()
+                , HttpStatus.OK);
     }
 
     @PostMapping("/warehouse/update")
@@ -221,6 +233,37 @@ public class MainController {
         bouquetService.disassemble(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/clients")
+    public ResponseEntity<List<Client>> getAllClients(){
+        return new ResponseEntity<>(clientService.findAndReplaceBonusGroup(clientService.findAll()),HttpStatus.OK);
+    }
+
+    @PostMapping("/clients/add")
+    public ResponseEntity<HttpStatus> addNewClient(@RequestBody ClientDTO clientDTO){
+        clientService.addNewClient(convertToClient(clientDTO));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/clients/download/excel")
+    public ResponseEntity<String> downloadClientsExcel() throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=storage.xlsx");
+        return ResponseEntity
+                .ok().headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(clientService.createExcelFile(clientService.findAll()));
+    }
+
+    @GetMapping("/bonus_groups")
+    public ResponseEntity<List<BonusGroup>> getAllBonuses(){
+        return new ResponseEntity<>(bonusGroupService.findAll(),HttpStatus.OK);
+    }
+
+    @PostMapping("/bonus_groups/add")
+    public ResponseEntity<HttpStatus> addNewBonusGroup(@RequestBody BonusGroup bonusGroup){
+        bonusGroupService.saveNew(bonusGroup);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
     // DTO CONVERTERS
@@ -232,6 +275,7 @@ public class MainController {
     private FlowerStorage convertToFlowerStorage(FlowerStorageDTO flowerStorageDTO){
         return modelMapper.map(flowerStorageDTO,FlowerStorage.class);
     }
+
     private List<FlowerStorageDTO> convertToFlowerStorageDTOList(List<FlowerStorage> flowerStorageList){
         List<FlowerStorageDTO> result = new ArrayList<>();
         for (FlowerStorage item:
@@ -275,4 +319,13 @@ public class MainController {
         }
         return result;
     }
+
+    private ClientDTO convertToClientDTO(Client client){
+        return modelMapper.map(client,ClientDTO.class);
+    }
+
+    private Client convertToClient(ClientDTO clientDTO){
+        return modelMapper.map(clientDTO,Client.class);
+    }
+
 }

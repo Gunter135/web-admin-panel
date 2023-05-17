@@ -71,7 +71,7 @@ const Sidebar = () => {
     const colors = tokens(theme.palette.mode)
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected,setSelected] = useState("Dashboard");
-    const [selectedSubMenu,setSelectedSubMenu] = useState("Точки продаж");
+    const [selectedSubMenu,setSelectedSubMenu] = useState("");
     return (
         <Box
             sx={{
@@ -265,7 +265,7 @@ const Sidebar = () => {
                                     setSelected={setSelected}
                                     setSelectedSubMenu={setSelectedSubMenu}
                                 />
-                             <CustomSubMenu
+                            {/* <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Продукты" 
                                 icon={<ShoppingBasketIcon/>}
@@ -290,7 +290,7 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </CustomSubMenu>
+                            </CustomSubMenu> */}
                             <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Клиенты" 
@@ -300,7 +300,7 @@ const Sidebar = () => {
                                 >
                                 <Item
                                     title="Список клиентов"
-                                    to="/team"
+                                    to="/clients"
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
@@ -331,7 +331,7 @@ const Sidebar = () => {
                                 setSelected={setSelected}
                                 setSelectedSubMenu={setSelectedSubMenu}
                             />
-                            <CustomSubMenu
+                            {/* <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Справочник" 
                                 icon={<HelpIcon/>}
@@ -386,7 +386,7 @@ const Sidebar = () => {
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
-                            </CustomSubMenu>
+                            </CustomSubMenu> */}
                             <CustomSubMenu
                                 style={{color:colors.grey[100]}} 
                                 title="Система лояльности" 
@@ -396,7 +396,7 @@ const Sidebar = () => {
                                 >
                                 <Item
                                     title="Бонусы"
-                                    to="/retail-stores"
+                                    to="/bonuses"
                                     selected={selected}
                                     setSelected={setSelected}
                                 />
