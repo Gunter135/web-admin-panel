@@ -27,16 +27,16 @@ import java.util.*;
 @CrossOrigin
 @RequestMapping("/admin")
 public class MainController {
-    FlowerShipmentService flowerShipmentService;
-    FlowerStorageService flowerStorageService;
-    ProviderService providerService;
-    ShipmentService shipmentService;
-    CodeGenService codeGenService;
-    BouquetService bouquetService;
-    ModelMapper modelMapper;
-    ImageService imageService;
-    ClientService clientService;
-    BonusGroupService bonusGroupService;
+    private final FlowerShipmentService flowerShipmentService;
+    private final FlowerStorageService flowerStorageService;
+    private final ProviderService providerService;
+    private final ShipmentService shipmentService;
+    private final CodeGenService codeGenService;
+    private final BouquetService bouquetService;
+    private final ModelMapper modelMapper;
+    private final ImageService imageService;
+    private final ClientService clientService;
+    private final BonusGroupService bonusGroupService;
 
     @Autowired
     public MainController(FlowerShipmentService flowerShipmentService,

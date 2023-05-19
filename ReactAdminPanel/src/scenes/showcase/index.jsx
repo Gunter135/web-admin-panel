@@ -174,6 +174,7 @@ const Showcase = () =>{
     const getBouquets = async () =>{
         try{
             const response = await api.get("/bouquets");
+            
             //console.log(response)
             setBouquets(response.data)
             //console.log(response.data)
