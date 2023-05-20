@@ -9,10 +9,8 @@ export default axios.create({
         baseURL:'http://localhost:8080/admin',
         method: 'GET',
         headers:{
-        Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': getToken(),
-        },
+            'Authorization':'Bearer '+getToken()
+        }
         //headers: {"ngrok-skip-browser-warning": "true"}
     });
 

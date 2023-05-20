@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.*;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin")
 public class MainController {
     private final FlowerShipmentService flowerShipmentService;

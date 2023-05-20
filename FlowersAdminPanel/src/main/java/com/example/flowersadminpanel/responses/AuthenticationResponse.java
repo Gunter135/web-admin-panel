@@ -1,8 +1,9 @@
 package com.example.flowersadminpanel.responses;
 
-public class LoginResponse {
+public class AuthenticationResponse {
 
     private String token;
+
 
     public String getToken() {
         return token;

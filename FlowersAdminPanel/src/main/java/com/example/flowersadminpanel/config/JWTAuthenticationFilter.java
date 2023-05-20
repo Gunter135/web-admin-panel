@@ -1,45 +1,57 @@
 package com.example.flowersadminpanel.config;
 
-import com.example.flowersadminpanel.security.AccountDetails;
 import com.example.flowersadminpanel.services.AccountDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private AccountDetailsService accountDetailsService;
     private JWTTokenHelper jwtTokenHelper;
 
+    @Autowired
     public JWTAuthenticationFilter(AccountDetailsService accountDetailsService, JWTTokenHelper jwtTokenHelper) {
         this.accountDetailsService = accountDetailsService;
         this.jwtTokenHelper = jwtTokenHelper;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-        String authToken = jwtTokenHelper.getToken(request);
-        if (authToken!=null){
-            String uname = jwtTokenHelper.getUsernameFromToken(authToken);
-            if(uname!=null){
-                AccountDetails accountDetails = accountDetailsService.loadUserByUsername(uname);
-                if(jwtTokenHelper.validateToken(authToken,accountDetails)){
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                            = new UsernamePasswordAuthenticationToken(accountDetails,null);
-                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                }
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String username;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+            filterChain.doFilter(request,response);
+            return;
+        }
+        jwt = authHeader.substring(7);
+        username = jwtTokenHelper.extractUsername(jwt);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            UserDetails userDetails = accountDetailsService.loadUserByUsername(username);
+            if (jwtTokenHelper.isTokenValid(jwt,userDetails)){
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                        null,userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
         filterChain.doFilter(request,response);
+
     }
 }

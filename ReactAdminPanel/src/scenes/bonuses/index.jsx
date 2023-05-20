@@ -6,6 +6,8 @@ import { useState,useEffect } from "react";
 import { useTheme } from "@mui/system";
 import * as yup from "yup";
 import { Formik } from "formik";
+import axios from "axios";
+import { getToken } from "../../api/axiosConfig";
 import { Box, Button, Dialog, DialogContent, DialogTitle, Switch, TextField, Typography } from "@mui/material";
 
 
@@ -16,6 +18,7 @@ const BonusGroupsList = () =>{
     const colors = tokens(theme.palette.mode)
     const[bonusGroups,setBonusGroups] = useState([]);
     const[open,setOpen] = useState(false);
+    const token = getToken();
     const initialValues = {
         name: "",
         status: false,
@@ -83,9 +86,19 @@ const BonusGroupsList = () =>{
 
 
 
+
+
     const getBonusGroups = async () => {
         try{
-            const response = await api.get("/bonus_groups")
+            // const response = await api.get("/bonus_groups")
+            const response = await axios.get(`http://localhost:8080/admin/bonus_groups`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+
             setBonusGroups(response.data)
         }
         catch(error){

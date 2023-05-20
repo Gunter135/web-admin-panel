@@ -31,7 +31,7 @@ const LoginPage = () =>{
         }
     }
     return(
-            <Box width={"100%"} height={"100%"} display={"flex"} justifyContent={"center"} sx={{background:"url('https://4kwallpapers.com/images/walls/thumbs_3t/4735.jpg') center center no-repeat",backgroundSize:"100%"}}>
+            <Box width={"100%"} height={"100%"} display={"flex"} justifyContent={"center"} sx={{background:"url('https://4kwallpapers.com/images/walls/thumbs_3t/71.jpg') center center no-repeat",backgroundSize:"100%"}}>
                 <Box position={"relative"} top={"192px"} bgcolor={"transparent"} borderRadius={"20px"} border={"2px solid rgba(255,255,255,0.5)"} width={"350px"} height={"400px"} sx={{backdropFilter:"blur(15px)"}}>
                     <Box display={"flex"} justifyContent={"center"} pt="20px">
                         <Typography variant="h1"> Login </Typography>

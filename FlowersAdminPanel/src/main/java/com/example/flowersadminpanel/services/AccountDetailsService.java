@@ -2,7 +2,6 @@ package com.example.flowersadminpanel.services;
 
 import com.example.flowersadminpanel.models.Account;
 import com.example.flowersadminpanel.repositories.AccountRepository;
-import com.example.flowersadminpanel.security.AccountDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,11 +22,11 @@ public class AccountDetailsService implements UserDetailsService {
     }
 
     @Override
-    public AccountDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Account> account = accountRepository.findByUsername(username);
         if (account.isEmpty()){
             throw new UsernameNotFoundException("User with this name does not exist!");
         }
-        return new AccountDetails(account.get());
+        return account.get();
     }
 }
