@@ -3,7 +3,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import Topbar from "./scenes/global/Topbar"
 import { Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./scenes/global/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dashboard from "./scenes/dashboard";
 import Warehouse from "./scenes/warehouse";
 import Shipment from "./scenes/invoice";
@@ -15,16 +15,40 @@ import ClientsList from "./scenes/clients";
 import BonusGroupsList from "./scenes/bonuses";
 import LoginPage from "./login/loginPage";
 import { getToken } from "./api/axiosConfig";
+import api from "../src/api/axiosConfig"
+import { fetchUserData } from "./api/axiosConfig";
+import axios from "axios";
 
 
-
+let loggedIn = false;
+// let responseResult = false;
+// there is no language worse than JS
 function App() {
     const [theme,colorMode] = useMode();
     const [isSidebar, setIsSidebar] = useState();
-    let loggedIn = false;
-    if(getToken() !== null){
+    const [obj,setObj] = useState(false);
+
+    if(getToken()!== null && getToken()!== "null"){
         loggedIn = true;
     }
+    // const fetchUserData = async () => {
+    //     try{
+    //         const response = await axios.post("http://localhost:8080/auth/check_token",localStorage.getItem("access_token"))
+    //         setObj(response.data)
+    //         if(obj === true){
+    //             console.log(obj,loggedIn)
+    //             loggedIn = obj
+    //             console.log(obj,loggedIn)
+    //         }
+    //     }
+    //     catch(err)
+    //     {
+    //         console.log(err)
+    //     }
+    // }
+    // useEffect(() =>{
+    //     fetchUserData();
+    // },[])
     
 
 

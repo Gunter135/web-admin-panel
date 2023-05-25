@@ -37,6 +37,7 @@ public class MainController {
     private final ImageService imageService;
     private final ClientService clientService;
     private final BonusGroupService bonusGroupService;
+//    private final AccountDetailsService accountDetailsService;
 
     @Autowired
     public MainController(FlowerShipmentService flowerShipmentService,
@@ -59,6 +60,7 @@ public class MainController {
         this.bouquetService = bouquetService;
         this.clientService = clientService;
         this.bonusGroupService = bonusGroupService;
+//        this.accountDetailsService = accountDetailsService;
     }
 
     @GetMapping("/warehouse")
@@ -262,6 +264,11 @@ public class MainController {
     @PostMapping("/bonus_groups/add")
     public ResponseEntity<HttpStatus> addNewBonusGroup(@RequestBody BonusGroup bonusGroup){
         bonusGroupService.saveNew(bonusGroup);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/fetch_user_data")
+    public ResponseEntity<HttpStatus> getUserData(){
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

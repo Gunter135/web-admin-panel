@@ -1,5 +1,6 @@
 package com.example.flowersadminpanel.config;
 
+import com.example.flowersadminpanel.repositories.TokenRepository;
 import com.example.flowersadminpanel.services.AccountDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,13 +21,16 @@ import java.io.IOException;
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
-    private AccountDetailsService accountDetailsService;
-    private JWTTokenHelper jwtTokenHelper;
+    private final AccountDetailsService accountDetailsService;
+    private final JWTTokenHelper jwtTokenHelper;
+    private final TokenRepository tokenRepository;
 
     @Autowired
-    public JWTAuthenticationFilter(AccountDetailsService accountDetailsService, JWTTokenHelper jwtTokenHelper) {
+    public JWTAuthenticationFilter(AccountDetailsService accountDetailsService, JWTTokenHelper jwtTokenHelper,
+                                   TokenRepository tokenRepository) {
         this.accountDetailsService = accountDetailsService;
         this.jwtTokenHelper = jwtTokenHelper;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         username = jwtTokenHelper.extractUsername(jwt);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = accountDetailsService.loadUserByUsername(username);
-            if (jwtTokenHelper.isTokenValid(jwt,userDetails)){
+            if (jwtTokenHelper.isTokenValid(jwt,userDetails) && tokenRepository.findByToken(jwt).isPresent()){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
                         null,userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

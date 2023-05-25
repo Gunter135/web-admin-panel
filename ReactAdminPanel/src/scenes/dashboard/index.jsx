@@ -9,7 +9,7 @@ const Dashboard=()=>{
 
     return(
         <Box>
-            <Header title="ТУТ ПОКА НИЧЕГО НЕТ"/>
+            <Header title="UNDER DEVELOPMENT"/>
         </Box>
     )
 }

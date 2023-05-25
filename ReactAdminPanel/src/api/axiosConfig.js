@@ -1,8 +1,14 @@
 import axios from "axios";
 
 export const getToken=()=>{
+    checkT().then((value) => {if(!value){localStorage.setItem("access_token",null)}})
     return localStorage.getItem("access_token")
 }
+const checkT = async () =>{
+    const response = await axios.post("http://localhost:8080/auth/check_token",localStorage.getItem("access_token"))
+    return response.data
+}
+
 
 
 export default axios.create({
@@ -20,6 +26,15 @@ export const userLogin=(authRequest)=>{
         'method':'POST',
         'url':`${process.env.hostUrl||'http://localhost:8080'}/auth/login`,
         'data':authRequest
+    })
+}
+export const userLogout=()=>{
+    return axios({
+        'method':'GET',
+        'url':`${process.env.hostUrl||'http://localhost:8080'}/auth/logout`,
+        headers:{
+            'Authorization':'Bearer '+getToken()
+        }
     })
 }
 
